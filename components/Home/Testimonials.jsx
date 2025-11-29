@@ -1,7 +1,6 @@
 "use client";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 
 const reviews = [
   {
@@ -65,6 +64,7 @@ const reviews = [
     rating: "5.0",
   },
 ];
+
 const StarRating = ({ rating }) => {
   const stars = [];
   const full = Math.floor(rating);
@@ -79,14 +79,17 @@ const StarRating = ({ rating }) => {
         <div key={i}>
           {type === "full" ? (
             <svg
-              className="w-6 h-6 text-yellow-400"
+              className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-yellow-400"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.974a1 1 0 00.95.69h4.178c.969 0 1.371 1.24.588 1.81l-3.385 2.46a1 1 0 00-.364 1.118l1.286 3.974c.3.921-.755 1.688-1.54 1.118l-3.385-2.46a1 1 0 00-1.175 0l-3.385 2.46c-.784.57-1.838-.197-1.539-1.118l1.285-3.974a1 1 0 00-.364-1.118L2.05 9.401c-.783-.57-.38-1.81.588-1.81h4.178a1 1 0 00.95-.69l1.286-3.974z" />
             </svg>
           ) : (
-            <svg className="w-6 h-6 text-yellow-400" viewBox="0 0 24 24">
+            <svg
+              className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-yellow-400"
+              viewBox="0 0 24 24"
+            >
               <defs>
                 <linearGradient id={`half-${i}`}>
                   <stop offset="50%" stopColor="currentColor" />
@@ -106,16 +109,27 @@ const StarRating = ({ rating }) => {
     </div>
   );
 };
+
 export default function Testimonials() {
   const [index, setIndex] = useState(0);
-  const [isHolding, setIsHolding] = useState(false); // pause carousel
+  const [isHolding, setIsHolding] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const next = () => setIndex((i) => (i + 1) % reviews.length);
   const prev = () => setIndex((i) => (i - 1 + reviews.length) % reviews.length);
 
-  // Auto-slide
   useEffect(() => {
-    if (isHolding) return; // pause on hold
+    if (isHolding) return;
     const timer = setInterval(next, 8000);
     return () => clearInterval(timer);
   }, [isHolding]);
@@ -123,75 +137,115 @@ export default function Testimonials() {
   const getPosition = (pos) => {
     const diff = (pos - index + reviews.length) % reviews.length;
 
-    if (diff === 0) return { scale: 1, zIndex: 40, opacity: 1, x: 0 };
-    if (diff === 1 || diff === reviews.length - 1)
-      return {
-        scale: 0.85,
-        zIndex: 20,
-        opacity: 0.98,
-        x: diff === 1 ? 300 : -300,
-      };
-
-    return { scale: 0.2, zIndex: 0, opacity: 0, x: 0 };
+    if (isMobile) {
+      // Mobile: Show only center card
+      if (diff === 0) return { scale: 1, zIndex: 40, opacity: 1, x: 0 };
+      return { scale: 0.2, zIndex: 0, opacity: 0, x: 0 };
+    } else {
+      // Desktop: Show 3 cards
+      if (diff === 0) return { scale: 1, zIndex: 40, opacity: 1, x: 0 };
+      if (diff === 1 || diff === reviews.length - 1)
+        return {
+          scale: 0.85,
+          zIndex: 20,
+          opacity: 0.98,
+          x: diff === 1 ? 300 : -300,
+        };
+      return { scale: 0.2, zIndex: 0, opacity: 0, x: 0 };
+    }
   };
 
   return (
-    <div className="p-5 border-b border-b-black/10 w-full">
-      <div className="min-h-[90vh] rounded-2xl bg-linear-to-b from-[#D7E6F9] to-[#B3C8E1] p-5">
-        <div className="flex flex-col items-center">
-          <h2 className="text-4xl highlight-text">Patient Testimonials</h2>
-          <h5 className="text-2xl subtext">What Our Patients Say</h5>
+    <div className="p-3 sm:p-5 border-b border-b-black/10 w-full">
+      <div className="min-h-[90vh] rounded-xl sm:rounded-2xl bg-linear-to-b from-blue-100 to-blue-200 p-4 sm:p-5">
+        <div className="flex flex-col items-center mb-4 sm:mb-6">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl highlight-text ">
+            Patient Testimonials
+          </h2>
+          <h5 className="text-lg sm:text-xl lg:text-2xl subtext mt-1">
+            What Our Patients Say
+          </h5>
         </div>
 
-        <div className="relative w-full flex justify-center items-center min-h-[70vh]">
+        <div className="relative w-full flex justify-center items-center min-h-[60vh] sm:min-h-[65vh] lg:min-h-[70vh] px-4">
           {reviews.map((item, i) => {
             const { scale, zIndex, opacity, x } = getPosition(i);
 
             return (
-              <motion.div
+              <div
                 key={item.author}
                 onMouseDown={() => setIsHolding(true)}
                 onMouseUp={() => setIsHolding(false)}
                 onMouseLeave={() => setIsHolding(false)}
-                className="absolute w-[40vw] h-[60vh] bg-white border rounded-2xl shadow-md p-5 overflow-hidden"
-                animate={{ scale, zIndex, opacity, x }}
-                transition={{ type: "spring", stiffness: 80, damping: 20 }}
+                onTouchStart={() => setIsHolding(true)}
+                onTouchEnd={() => setIsHolding(false)}
+                className="absolute w-[85vw] sm:w-[70vw] md:w-[55vw] lg:w-[45vw] xl:w-[40vw] 
+                          h-[55vh] sm:h-[58vh] md:h-[60vh]
+                          bg-white border rounded-xl sm:rounded-2xl shadow-lg 
+                          p-4 sm:p-5 overflow-hidden
+                          transition-all duration-500 ease-out cursor-grab active:cursor-grabbing"
+                style={{
+                  transform: `translateX(${x}px) scale(${scale})`,
+                  zIndex,
+                  opacity,
+                }}
               >
-                <h3 className="text-2xl font-semibold text-black mb-2 mx-5">
+                {/* Author Name */}
+                <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-black mb-2 px-2 sm:px-4">
                   {item.author}
                 </h3>
 
-                {/* ⭐ RATING */}
-                <div className="mx-5 mb-3">
+                {/* Rating */}
+                <div className="px-2 sm:px-4 mb-3">
                   <StarRating rating={parseFloat(item.rating)} />
                 </div>
 
-                <p className="mx-5 text-md font-light text-black text-justify h-[60%] overflow-y-auto">
-                  {item.review}
-                </p>
+                {/* Review Text */}
+                <div className="px-2 sm:px-4 h-[calc(100%-140px)] sm:h-[calc(100%-150px)] overflow-y-auto">
+                  <p className="text-sm sm:text-base md:text-lg font-light text-black text-justify leading-relaxed">
+                    {item.review}
+                  </p>
+                </div>
 
-                <p className="text-center text-gray-500 mt-4 text-sm">
-                  Click & hold to pause
+                {/* Pause Hint */}
+                <p className="text-center text-gray-500 mt-2 sm:mt-3 text-xs sm:text-sm">
+                  {isMobile ? "Tap & hold to pause" : "Click & hold to pause"}
                 </p>
-              </motion.div>
+              </div>
             );
           })}
         </div>
 
-        {/* Controls */}
-        <div className="relative z-100 flex place-self-center gap-6 mt-5">
+        {/* Navigation Controls */}
+        <div className="relative z-50 flex justify-center items-center gap-4 sm:gap-6 mt-4 sm:mt-6">
           <button
             onClick={prev}
-            className="p-2 bg-[#0D2F5C] text-white rounded-full hover:scale-110 transition"
+            className="p-2 sm:p-3 bg-[#0D2F5C] text-white rounded-full hover:scale-110 transition shadow-lg"
+            aria-label="Previous testimonial"
           >
-            <ChevronLeft />
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
+
+          {/* Dots Indicator */}
+          <div className="flex gap-2">
+            {reviews.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setIndex(i)}
+                className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all ${
+                  i === index ? "bg-[#0D2F5C] w-6 sm:w-8" : "bg-gray-400"
+                }`}
+                aria-label={`Go to testimonial ${i + 1}`}
+              />
+            ))}
+          </div>
 
           <button
             onClick={next}
-            className="p-2 bg-[#0D2F5C] text-white rounded-full hover:scale-110 transition"
+            className="p-2 sm:p-3 bg-[#0D2F5C] text-white rounded-full hover:scale-110 transition shadow-lg"
+            aria-label="Next testimonial"
           >
-            <ChevronRight />
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
       </div>

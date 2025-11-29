@@ -14,7 +14,10 @@ export const metadata = {
   title: "Akshit Anand",
   description: "",
 };
-
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+/>;
 export default function RootLayout({ children }) {
   return (
     <html lang="en">

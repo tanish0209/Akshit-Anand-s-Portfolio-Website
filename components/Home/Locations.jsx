@@ -1,11 +1,10 @@
 import { Clock10, MapPin, Phone } from "lucide-react";
-import React from "react";
 
 const cliniclocations = [
   {
     name: "Rajiv Gandhi Cancer Institute & Research Centre, Rohini",
     address:
-      "Sir Chotu Ram Marg, Rohini Institutional Area, Sector 5, Rohini,New Delhi, Delhi, 110085",
+      "Sir Chotu Ram Marg, Rohini Institutional Area, Sector 5, Rohini, New Delhi, Delhi, 110085",
     phone: "+91-9980216451, +91-11-47022222",
     availability: "Wednesday, Friday : 12:00 Noon - 4:00 PM",
     location: (
@@ -34,37 +33,49 @@ const cliniclocations = [
     ),
   },
 ];
+
 function Locations() {
   return (
-    <div className="w-full border-b border-b-black/10 p-5">
-      <div className="min-h-[90vh] rounded-2xl bg-gray-200 p-5">
-        <h3 className="text-4xl highlight-text place-self-center">
+    <div className="w-full border-b border-b-black/10 p-3 sm:p-5">
+      <div className="min-h-[90vh] rounded-xl sm:rounded-2xl bg-gray-200 p-3 sm:p-5">
+        <h3 className="text-2xl sm:text-3xl lg:text-4xl highlight-text text-center mb-4 sm:mb-2 ">
           Available Locations
         </h3>
-        <div className="m-5 grid grid-cols-2 gap-5">
+        <div className="mt-3 sm:mt-5 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
           {cliniclocations.map((item) => {
             return (
               <div
                 key={item.name}
-                className="w-full rounded-2xl background-primary p-5 "
+                className="w-full rounded-xl sm:rounded-2xl background-primary p-4 sm:p-5 shadow-lg"
               >
-                <div className="w-full relative pb-[40%] rounded-xl overflow-hidden">
-                  {item.location}{" "}
-                </div>
-                <h3 className="text-3xl py-2">{item.name}</h3>
-                <div className="text-2xl py-1 flex items-center gap-3 min-h-20">
-                  <MapPin className="size-6 text-black shrink-0 " />
-                  <p className="leading-relaxed">{item.address}</p>
+                {/* Map Container */}
+                <div className="w-full relative pb-[50%] sm:pb-[45%] lg:pb-[40%] rounded-lg sm:rounded-xl overflow-hidden shadow-md">
+                  {item.location}
                 </div>
 
-                <div className="text-2xl py-1 flex items-center gap-3 min-h-10">
-                  <Phone className="size-6 text-black shrink-0" />
-                  <p className="leading-relaxed">{item.phone}</p>
+                {/* Clinic Name */}
+                <h3 className="text-xl sm:text-2xl lg:text-3xl py-2 sm:py-3  leading-tight">
+                  {item.name}
+                </h3>
+
+                {/* Address */}
+                <div className="text-base sm:text-lg lg:text-xl xl:text-2xl py-2 flex items-center gap-2 sm:gap-3 min-h-16 sm:min-h-20">
+                  <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-black shrink-0 mt-1" />
+                  <p className="leading-relaxed ">{item.address}</p>
                 </div>
 
-                <div className="text-2xl py-1 flex items-center gap-3 min-h-10">
-                  <Clock10 className="size-6 text-black shrink-0" />
-                  <p className="leading-relaxed">{item.availability}</p>
+                {/* Phone */}
+                <div className="text-base sm:text-lg lg:text-xl xl:text-2xl py-2 flex items-center gap-2 sm:gap-3 min-h-10">
+                  <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-black shrink-0 mt-1" />
+                  <p className="leading-relaxed  break-all sm:break-normal">
+                    {item.phone}
+                  </p>
+                </div>
+
+                {/* Availability */}
+                <div className="text-base sm:text-lg lg:text-xl xl:text-2xl py-2 flex items-center gap-2 sm:gap-3 min-h-10">
+                  <Clock10 className="w-5 h-5 sm:w-6 sm:h-6 text-black shrink-0 mt-1" />
+                  <p className="leading-relaxed ">{item.availability}</p>
                 </div>
               </div>
             );
