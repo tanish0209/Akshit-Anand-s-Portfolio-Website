@@ -150,7 +150,7 @@ export default function Services() {
                   </div>
                 </div>
 
-                <p className=" mx-6 sm:mx-10 text-sm sm:text-base lg:text-lg xl:text-xl text-white text-center sm:text-justify leading-relaxed">
+                <p className=" mx-6 sm:mx-10 text-sm sm:text-base lg:text-lg text-white text-center sm:text-justify leading-relaxed">
                   {item.desc}
                 </p>
               </div>
