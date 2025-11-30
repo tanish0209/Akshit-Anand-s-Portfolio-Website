@@ -50,3 +50,8 @@ html {
 .background-secondary {
   background-color: #0d2f5c;
 }
+#locations,
+#gallery,
+#testimonials {
+  scroll-margin-top: 60px;
+}

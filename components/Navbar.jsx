@@ -70,7 +70,7 @@ export default function Navbar() {
 
   return (
     <>
-      <section className="bg-white h-16 border-b w-full px-4 sm:px-5 border-b-black/10 sticky top-0 z-50">
+      <section className="bg-white h-16 border-b w-full px-4 sm:px-5 border-b-black/10 sticky top-0 z-450">
         <div className="flex items-center justify-between h-full">
           {/* Logo */}
           <div className="flex flex-col leading-tight">
