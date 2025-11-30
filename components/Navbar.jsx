@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
-
+import Link from "next/link";
 export default function Navbar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const pathname = usePathname(); // 👈 get active route
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const closeSidebar = () => setIsSidebarOpen(false);
@@ -23,7 +25,7 @@ export default function Navbar() {
     <>
       <section className="bg-white h-16 border-b w-full px-4 sm:px-5 border-b-black/10 sticky top-0 z-600">
         <div className="flex items-center justify-between h-full">
-          {/* Logo/Brand */}
+          {/* Logo */}
           <div className="flex flex-col leading-tight">
             <h2 className="text-xl sm:text-2xl lg:text-3xl ">Akshit Anand</h2>
             <h5 className="text-xs sm:text-sm lg:text-base highlight-text sm:block">
@@ -31,20 +33,31 @@ export default function Navbar() {
             </h5>
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Nav */}
           <ul className="hidden xl:flex items-center gap-6 text-lg subtext">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="relative cursor-pointer hover:text-black transition whitespace-nowrap
-                before:absolute before:-bottom-1 before:left-0 before:h-0.5 before:w-0 
-                before:bg-blue-900 before:transition-all before:duration-300 
-                hover:before:w-full"
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`relative cursor-pointer transition whitespace-nowrap pb-1
+                  ${isActive ? "text-black " : "text-gray-700 hover:text-black"}
+                  
+                  before:absolute before:-bottom-0 before:left-0 before:h-0.5 
+                  before:transition-all before:duration-300 
+                  ${
+                    isActive
+                      ? "before:w-full before:bg-blue-900"
+                      : "before:w-0 hover:before:w-full before:bg-blue-900"
+                  }
+                `}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </ul>
 
           {/* Mobile Menu Button */}
@@ -92,21 +105,34 @@ export default function Navbar() {
         {/* Sidebar Navigation */}
         <nav className="p-5">
           <ul className="flex flex-col gap-2">
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  onClick={closeSidebar}
-                  className="block px-4 py-3 text-base subtext hover:bg-blue-50 hover:text-blue-900 
-                  rounded-lg transition duration-200 relative
-                  before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-0 before:w-1 
-                  before:bg-blue-900 before:transition-all before:duration-300 
-                  hover:before:h-full hover:pl-5"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    onClick={closeSidebar}
+                    className={`block px-4 py-3 text-base rounded-lg transition duration-200 relative
+                    ${
+                      isActive
+                        ? "text-black  bg-blue-50"
+                        : "text-gray-700 hover:bg-blue-50"
+                    }
+                    `}
+                  >
+                    {link.label}
+
+                    {/* Left blue bar active indicator */}
+                    <span
+                      className={`absolute left-0 top-0 h-full w-1 transition-all 
+                      ${isActive ? "bg-blue-900" : "bg-transparent"}
+                    `}
+                    ></span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
